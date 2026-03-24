@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>byClick App</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════
+   CONFIGURACIÓN DE MARCA DEL PROFESIONAL
+   ══════════════════════════════════════ */
+:root {
+  /* MARCA - EDITAR AQUÍ */
+  --brand-name:    "Dra. González";
+  --brand-esp:     "Ortodoncia · Buenos Aires";
+  --brand-slogan:  "Tu sonrisa, nuestro compromiso";
+
+  /* PALETA SALUD - CLÍNICA PREMIUM */
+  --brand-primary:   #00897B;   /* verde salud principal */
+  --brand-primary2:  #4DB6AC;   /* verde menta secundario */
+  --brand-dark:      #00695C;   /* verde oscuro para textos */
+  --brand-light:     #E0F2F1;   /* verde muy claro fondos */
+  --brand-xlight:    #F0FAF8;   /* blanco verdoso */
+
+  /* SISTEMA */
+  --bg:        #F8FFFE;
+  --surface:   #FFFFFF;
+  --surface2:  #F0FAF8;
+  --sep:       rgba(0,137,123,0.12);
+  --label:     #2E3A38;
+  --label2:    #3D4F4C;
+  --label3:    #6B8F8B;
+  --label4:    #9BB8B4;
+  --blue:      var(--brand-primary);
+  --blue-lt:   var(--brand-light);
+  --teal:      var(--brand-primary2);
+  --teal-lt:   var(--brand-xlight);
+  --red:       #E53935;
+  --red-lt:    #FFEBEE;
+  --orange:    #FB8C00;
+  --orange-lt: #FFF3E0;
+  --green:     #43A047;
+  --green-lt:  #E8F5E9;
+  --wa:        #25D366;
+  --r-card:    16px;
+  --r-pill:    50px;
+  --shadow-sm: 0 1px 4px rgba(0,137,123,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,137,123,0.10), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 32px rgba(0,137,123,0.14), 0 2px 8px rgba(0,0,0,0.06);
+  --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-disp: 'Playfair Display', Georgia, serif;
+  --safe-top:  env(safe-area-inset-top, 44px);
+  --safe-bot:  env(safe-area-inset-bottom, 20px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { background:#F8FFFE; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--label);
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* STATUS BAR */
+.status-bar {
+  height: calc(var(--safe-top) + 4px);
+  background: var(--surface);
+}
+
+/* NAV BAR */
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--sep);
+  padding: 0 16px;
+}
+.nav-inner {
+  display: flex; align-items: center;
+  justify-content: space-between; height: 52px;
+}
+.nav-brand { display: flex; align-items: center; gap: 10px; }
+.nav-logo-box {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--brand-light);
+  border: 1.5px dashed var(--brand-primary2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; font-weight: 700;
+  color: var(--brand-dark); text-align: center; line-height: 1.2;
+  padding: 2px;
+}
+.nav-brand-text { display: flex; flex-direction: column; }
+.nav-brand-name {
+  font-family: var(--font-disp); font-size: 0.9rem;
+  font-weight: 700; color: var(--label); letter-spacing: -0.2px; line-height: 1.1;
+}
+.nav-brand-esp { font-size: 0.58rem; color: var(--label4); font-weight: 500; }
+.nav-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--brand-light);
+  border: 2px solid var(--brand-primary2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: var(--brand-dark);
+}
+
+/* TAB BAR */
+.tab-bar {
+  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: var(--surface);
+  border-top: 1px solid var(--sep);
+  padding-bottom: calc(var(--safe-bot) + 2px);
+  z-index: 100;
+}
+.tab-items { display: flex; padding: 8px 0 4px; }
+.tab-item {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 3px; padding: 4px 0;
+  border: none; background: none; cursor: pointer;
+  transition: opacity .15s; font-family: var(--font-body);
+}
+.tab-item:active { opacity: 0.6; }
+.tab-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; transition: all .2s;
+}
+.tab-item.active .tab-icon { background: var(--brand-light); transform: scale(1.08); }
+.tab-label { font-size: 0.6rem; font-weight: 600; color: var(--label4); letter-spacing: 0.2px; }
+.tab-item.active .tab-label { color: var(--brand-primary); }
+
+/* CONTENT */
+.content { padding: 16px 16px 120px; }
+.panel { display: none; animation: fadeUp .28s ease; }
+.panel.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+/* SPLASH IDENTIDAD - CLÍNICA PREMIUM */
+.identity-splash {
+  background: var(--surface);
+  border: 1.5px solid var(--sep);
+  border-radius: 20px; padding: 28px 20px 24px;
+  margin-bottom: 16px; box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden; text-align: center;
+}
+.identity-splash::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary2));
+}
+.identity-splash::after {
+  content: ''; position: absolute; bottom: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(0,137,123,0.06), transparent 70%);
+  border-radius: 50%;
+}
+.splash-logo-wrap {
+  width: 80px; height: 80px; border-radius: 20px;
+  background: var(--brand-xlight);
+  border: 2px dashed var(--brand-primary2);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  margin: 0 auto 16px; gap: 3px;
+  position: relative; z-index: 1;
+}
+.splash-logo-ico { font-size: 1.8rem; }
+.splash-logo-txt { font-size: 0.5rem; font-weight: 700; color: var(--brand-dark); letter-spacing: 0.5px; text-transform: uppercase; }
+.splash-name {
+  font-family: var(--font-disp); font-size: 1.6rem;
+  color: var(--label); line-height: 1.2; margin-bottom: 4px;
+  position: relative; z-index: 1;
+}
+.splash-esp {
+  font-size: 0.72rem; color: var(--label3); font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.splash-divider {
+  width: 40px; height: 2px;
+  background: linear-gradient(90deg, var(--brand-primary), var(--brand-primary2));
+  margin: 0 auto 12px; border-radius: 2px;
+  position: relative; z-index: 1;
+}
+.splash-slogan {
+  font-family: var(--font-disp); font-size: 0.9rem;
+  color: var(--brand-dark); font-style: italic; font-weight: 600;
+  position: relative; z-index: 1;
+}
+
+/* FOTOS IDENTIDAD */
+.identity-photos {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px; margin-bottom: 16px;
+}
+.id-photo {
+  aspect-ratio: 1; border-radius: 14px;
+  background: var(--brand-xlight);
+  border: 1.5px dashed var(--brand-primary2);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 5px; cursor: pointer; transition: all .15s;
+  overflow: hidden; position: relative;
+}
+.id-photo:active { transform: scale(0.95); background: var(--brand-light); }
+.id-photo-ico { font-size: 1.6rem; opacity: 0.7; }
+.id-photo-lbl { font-size: 0.55rem; font-weight: 700; color: var(--brand-dark); text-align: center; line-height: 1.3; padding: 0 4px; }
+.id-photo-camera {
+  position: absolute; bottom: 6px; right: 6px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--brand-primary); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+}
+
+/* HERO PROGRESO */
+.hero {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%);
+  border-radius: 20px; padding: 22px 20px;
+  margin-bottom: 16px; box-shadow: var(--shadow-lg);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+  border-radius: 50%;
+}
+.hero-eyebrow {
+  font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.7);
+  letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 6px; position: relative; z-index: 1;
+}
+.hero-name {
+  font-family: var(--font-disp); font-size: 1.5rem;
+  color: #fff; line-height: 1.2; margin-bottom: 2px;
+  position: relative; z-index: 1;
+}
+.hero-sub {
+  font-size: 0.76rem; color: rgba(255,255,255,0.6);
+  font-weight: 400; margin-bottom: 18px;
+  position: relative; z-index: 1;
+}
+.progress-wrap { position: relative; z-index: 1; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 0.68rem; color: rgba(255,255,255,0.6); font-weight: 600; margin-bottom: 7px; }
+.progress-track { height: 6px; background: rgba(255,255,255,0.2); border-radius: 50px; overflow: hidden; }
+.progress-fill { height: 100%; width: 65%; background: rgba(255,255,255,0.9); border-radius: 50px; animation: growBar .8s ease forwards; }
+@keyframes growBar { from { width: 0 } to { width: 65% } }
+.hero-appt {
+  margin-top: 14px; background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 12px; padding: 11px 14px;
+  display: flex; align-items: center; gap: 11px;
+  position: relative; z-index: 1;
+}
+.appt-cal { width: 42px; height: 42px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+.appt-cal .month { font-size: 0.52rem; font-weight: 800; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
+.appt-cal .day { font-family: var(--font-disp); font-size: 1.3rem; color: #fff; line-height: 1; }
+.appt-info .albl { font-size: 0.6rem; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.appt-info .adate { font-size: 0.84rem; font-weight: 700; color: #fff; margin-top: 1px; }
+.appt-info .atype { font-size: 0.68rem; color: rgba(255,255,255,0.5); margin-top: 1px; }
+
+/* MODULE GRID */
+.module-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.module-btn {
+  background: var(--surface); border: 1.5px solid var(--sep);
+  border-radius: 16px; padding: 18px 14px 16px;
+  cursor: pointer; text-align: left;
+  box-shadow: var(--shadow-sm); transition: all .18s;
+  position: relative; overflow: hidden; font-family: var(--font-body);
+}
+.module-btn:active { transform: scale(0.96); background: var(--brand-xlight); }
+.module-btn .m-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+.module-btn .m-title { font-size: 0.82rem; font-weight: 700; color: var(--label); line-height: 1.3; }
+.module-btn .m-sub { font-size: 0.62rem; color: var(--label4); font-weight: 500; margin-top: 3px; }
+.module-btn .m-dot { position: absolute; top: 12px; right: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-primary); }
+
+/* SECTION */
+.section-title { font-family: var(--font-disp); font-size: 1.6rem; font-weight: 700; color: var(--label); letter-spacing: -0.5px; margin-bottom: 4px; }
+.section-sub { font-size: 0.82rem; color: var(--label3); font-weight: 400; margin-bottom: 20px; line-height: 1.5; }
+
+/* CARDS */
+.ios-card { background: var(--surface); border-radius: var(--r-card); box-shadow: var(--shadow-md); border: 1px solid var(--sep); overflow: hidden; margin-bottom: 12px; }
+.ios-card-inner { padding: 16px; }
+
+/* LIST */
+.list-group { margin-bottom: 12px; }
+.list-header { font-size: 0.68rem; font-weight: 700; color: var(--label3); text-transform: uppercase; letter-spacing: 0.8px; padding: 0 4px 8px; }
+.list-item { background: var(--surface); display: flex; align-items: center; gap: 13px; padding: 13px 16px; border-bottom: 1px solid var(--sep); cursor: pointer; transition: background .12s; font-family: var(--font-body); width: 100%; border: none; text-align: left; }
+.list-item:first-of-type { border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--sep); }
+.list-item:last-of-type { border-radius: 0 0 12px 12px; border-bottom: none; }
+.list-item:only-of-type { border-radius: 12px; border-bottom: none; }
+.list-item:active { background: var(--brand-xlight); }
+.li-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.li-body { flex: 1; }
+.li-title { font-size: 0.86rem; font-weight: 600; color: var(--label); }
+.li-sub { font-size: 0.72rem; color: var(--label3); margin-top: 1px; line-height: 1.4; }
+.li-right { display: flex; align-items: center; gap: 6px; }
+.li-badge { font-size: 0.58rem; font-weight: 800; padding: 2px 8px; border-radius: 50px; letter-spacing: 0.3px; text-transform: uppercase; }
+.badge-red { background: var(--red-lt); color: var(--red); }
+.badge-orange { background: var(--orange-lt); color: var(--orange); }
+.badge-green { background: var(--green-lt); color: #1B7A3E; }
+.badge-teal { background: var(--brand-light); color: var(--brand-dark); }
+.li-chevron { font-size: 0.7rem; color: var(--label4); }
+
+/* TIMELINE */
+.timeline { padding: 4px 0; }
+.tl-row { display: flex; gap: 12px; padding-bottom: 18px; position: relative; }
+.tl-row:not(:last-child)::after { content: ''; position: absolute; left: 17px; top: 38px; width: 2px; height: calc(100% - 20px); background: var(--sep); }
+.tl-row.done::after { background: var(--brand-primary2); }
+.tl-row.cur::after { background: linear-gradient(var(--brand-primary), var(--sep)); }
+.tl-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; border: 2.5px solid var(--sep); background: var(--surface); z-index: 1; }
+.tl-row.done .tl-dot { background: var(--brand-primary); border-color: var(--brand-primary); color: white; }
+.tl-row.cur .tl-dot { background: var(--brand-dark); border-color: var(--brand-dark); box-shadow: 0 0 0 5px var(--brand-light); color: white; }
+.tl-row.pend .tl-dot { background: var(--bg); color: var(--label4); }
+.tl-title { font-size: 0.84rem; font-weight: 700; color: var(--label); margin-bottom: 2px; }
+.tl-desc { font-size: 0.72rem; color: var(--label3); line-height: 1.55; }
+.tl-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; font-weight: 700; padding: 2px 8px; border-radius: 50px; margin-top: 5px; }
+.tl-tag.done { background: var(--brand-light); color: var(--brand-dark); }
+.tl-tag.cur { background: var(--brand-dark); color: white; }
+.tl-tag.pend { background: var(--bg); color: var(--label4); border: 1px solid var(--sep); }
+
+/* PHOTO STRIP */
+.photo-strip { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 4px 2px 8px; }
+.photo-strip::-webkit-scrollbar { display: none; }
+.photo-cell { flex: none; text-align: center; }
+.photo-frame { width: 76px; height: 76px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 5px; border: 1.5px dashed var(--brand-primary2); background: var(--brand-xlight); transition: transform .15s; }
+.photo-frame.filled { background: linear-gradient(135deg, var(--brand-primary), var(--brand-dark)); border-style: solid; border-color: transparent; font-size: 2rem; }
+.photo-frame:active { transform: scale(0.94); }
+.photo-lbl { font-size: 0.62rem; font-weight: 600; color: var(--label3); }
+.photo-date { font-size: 0.58rem; color: var(--label4); }
+
+/* VIDEO */
+.video-card { background: var(--surface); border-radius: var(--r-card); box-shadow: var(--shadow-md); border: 1px solid var(--sep); overflow: hidden; margin-bottom: 12px; }
+.video-embed-wrap { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: #000; }
+.video-embed-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.video-meta { padding: 13px 15px; }
+.vm-title { font-size: 0.9rem; font-weight: 700; color: var(--label); margin-bottom: 3px; }
+.vm-desc { font-size: 0.76rem; color: var(--label3); line-height: 1.55; }
+.vm-tag { display: inline-block; background: var(--brand-light); color: var(--brand-dark); font-size: 0.6rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; margin-top: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* GUIDE */
+.segmented { display: flex; background: var(--brand-xlight); border-radius: 10px; padding: 3px; margin-bottom: 18px; }
+.seg-btn { flex: 1; padding: 8px; border: none; background: none; border-radius: 8px; font-family: var(--font-body); font-size: 0.78rem; font-weight: 600; color: var(--label3); cursor: pointer; transition: all .2s; }
+.seg-btn.active { background: var(--surface); color: var(--brand-dark); box-shadow: var(--shadow-sm); }
+.guide-sec { display: none; }
+.guide-sec.active { display: block; }
+.food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.food-col { border-radius: 14px; padding: 14px 12px; }
+.food-ok { background: var(--green-lt); }
+.food-no { background: var(--red-lt); }
+.food-col-title { font-size: 0.68rem; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.food-ok .food-col-title { color: #1B7A3E; }
+.food-no .food-col-title { color: var(--red); }
+.food-row { font-size: 0.74rem; color: var(--label2); padding: 5px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06); display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.food-row:last-child { border-bottom: none; }
+.step-row { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--brand-primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.76rem; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 0.8rem; line-height: 1.65; color: var(--label2); font-weight: 500; }
+.step-text strong { font-weight: 700; color: var(--brand-dark); }
+
+/* EMERGENCIA */
+.emerg-banner { background: linear-gradient(145deg, #7F0000, var(--red)); border-radius: 20px; padding: 22px 20px; text-align: center; margin-bottom: 16px; box-shadow: 0 8px 32px rgba(229,57,53,0.25); position: relative; overflow: hidden; }
+.emerg-banner::after { content:'🚨'; position:absolute; font-size:6rem; right:-10px; bottom:-15px; opacity:0.08; }
+.emerg-title { font-family: var(--font-disp); font-size: 1.3rem; color:#fff; margin-bottom: 4px; }
+.emerg-sub { font-size: 0.76rem; color: rgba(255,255,255,0.75); margin-bottom: 16px; line-height: 1.5; }
+.call-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--red); border: none; padding: 14px 32px; border-radius: var(--r-pill); font-family: var(--font-body); font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.15); transition: all .18s; }
+.call-btn:active { transform: scale(0.95); }
+.detail-view { display: none; animation: fadeUp .28s ease; }
+.detail-view.active { display: block; }
+.back-btn { display: flex; align-items: center; gap: 5px; background: none; border: none; color: var(--brand-primary); font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 4px 0; margin-bottom: 18px; }
+.detail-hero { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; }
+.detail-icon-wrap { width: 60px; height: 60px; border-radius: 16px; background: var(--brand-light); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; box-shadow: var(--shadow-md); }
+.detail-title { font-family: var(--font-disp); font-size: 1.3rem; color: var(--label); line-height: 1.25; padding-top: 4px; }
+.detail-desc { font-size: 0.82rem; color: var(--label3); line-height: 1.65; margin-bottom: 14px; }
+.info-box { border-radius: 14px; padding: 16px; margin-bottom: 10px; }
+.info-box.green { background: var(--green-lt); }
+.info-box.red { background: var(--red-lt); }
+.info-box-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.info-box-title { font-size: 0.8rem; font-weight: 800; }
+.info-box.green .info-box-title { color: #1B7A3E; }
+.info-box.red .info-box-title { color: var(--red); }
+.info-box-text { font-size: 0.8rem; line-height: 1.65; color: var(--label2); }
+
+/* CONTACTO */
+.contact-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-dark) 100%); border-radius: 20px; padding: 22px 20px; margin-bottom: 12px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden; }
+.contact-hero::after { content:'💬'; position:absolute; font-size:5rem; right:-5px; bottom:-10px; opacity:0.08; }
+.contact-hero-title { font-family: var(--font-disp); font-size: 1.3rem; color:#fff; margin-bottom: 14px; }
+.contact-row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.contact-row:last-child { border-bottom: none; }
+.ci-ico { width: 32px; height: 32px; background: rgba(255,255,255,0.15); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+.ci-lbl { font-size: 0.58rem; color: rgba(255,255,255,0.6); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display:block; margin-bottom:1px; }
+.ci-val { font-size: 0.8rem; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+/* BOTONES */
+.wa-btn-big { width: 100%; min-height: 56px; background: var(--wa); color: #fff; border: none; border-radius: var(--r-pill); font-family: var(--font-body); font-size: 0.95rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 9px; box-shadow: 0 4px 20px rgba(37,211,102,0.35); transition: all .18s; margin-top: 14px; }
+.wa-btn-big:active { transform: scale(0.97); }
+.primary-btn { width: 100%; min-height: 56px; background: var(--brand-primary); color: #fff; border: none; border-radius: var(--r-pill); font-family: var(--font-body); font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 20px rgba(0,137,123,0.3); transition: all .18s; margin-top: 10px; }
+.primary-btn:active { transform: scale(0.97); }
+
+/* FORM */
+.form-grp { margin-bottom: 12px; }
+.form-lbl { font-size: 0.68rem; font-weight: 700; color: var(--label3); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; display: block; }
+.form-ctrl { width: 100%; min-height: 44px; padding: 11px 14px; background: var(--surface); border: 1.5px solid var(--sep); border-radius: 12px; font-family: var(--font-body); font-size: 0.86rem; color: var(--label); outline: none; transition: border-color .2s; font-weight: 500; }
+.form-ctrl:focus { border-color: var(--brand-primary); }
+textarea.form-ctrl { height: 80px; resize: none; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* DERIVACIONES */
+.derivacion-card { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow-md); border: 1px solid var(--sep); margin-bottom: 10px; overflow: hidden; }
+.deriv-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--sep); }
+.deriv-ico { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.deriv-name { font-size: 0.88rem; font-weight: 700; color: var(--label); }
+.deriv-esp { font-size: 0.72rem; color: var(--label3); margin-top: 1px; }
+.deriv-badge { margin-left: auto; font-size: 0.58rem; font-weight: 800; padding: 3px 10px; border-radius: 50px; background: var(--brand-light); color: var(--brand-dark); white-space: nowrap; }
+.deriv-actions { display: flex; }
+.deriv-btn { flex: 1; padding: 12px; border: none; background: none; font-family: var(--font-body); font-size: 0.75rem; font-weight: 700; color: var(--brand-primary); cursor: pointer; border-right: 1px solid var(--sep); display: flex; align-items: center; justify-content: center; gap: 5px; }
+.deriv-btn:last-child { border-right: none; }
+.deriv-btn:active { background: var(--brand-xlight); }
+
+/* GALERÍA */
+.galeria-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.galeria-item { aspect-ratio: 1; border-radius: 14px; background: var(--brand-xlight); border: 1.5px dashed var(--brand-primary2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all .15s; position: relative; }
+.galeria-item:active { transform: scale(0.95); background: var(--brand-light); }
+.galeria-item-ico { font-size: 2.2rem; opacity: 0.8; }
+.galeria-item-lbl { font-size: 0.65rem; font-weight: 700; color: var(--brand-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+.galeria-item-tag { position: absolute; bottom: 6px; background: var(--brand-primary); color: white; font-size: 0.52rem; font-weight: 700; padding: 2px 8px; border-radius: 20px; }
+
+/* CONSEJOS */
+.consejo-card { background: var(--surface); border-radius: 16px; box-shadow: var(--shadow-sm); border: 1px solid var(--sep); margin-bottom: 10px; padding: 16px; border-left: 4px solid var(--brand-primary); }
+.consejo-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.consejo-ico { font-size: 1.2rem; }
+.consejo-title { font-size: 0.84rem; font-weight: 700; color: var(--label); }
+.consejo-date { font-size: 0.62rem; color: var(--label4); margin-left: auto; }
+.consejo-text { font-size: 0.78rem; color: var(--label2); line-height: 1.6; }
+
+/* TIP */
+.tip-banner { background: var(--brand-xlight); border-radius: 14px; padding: 13px 15px; border-left: 4px solid var(--brand-primary2); margin-bottom: 12px; }
+.tip-title { font-size: 0.78rem; font-weight: 800; color: var(--brand-dark); margin-bottom: 3px; }
+.tip-body { font-size: 0.74rem; color: var(--label2); line-height: 1.6; }
+
+/* POWERED BY */
+.powered-by { text-align: center; padding: 16px 0 4px; font-size: 0.58rem; color: var(--label4); font-weight: 500; letter-spacing: 0.5px; }
+.powered-by span { color: var(--brand-primary); font-weight: 700; }
+
+/* WA FLOAT */
+.wa-float { position: fixed; bottom: calc(80px + var(--safe-bot)); right: 18px; z-index: 200; width: 56px; height: 56px; background: var(--wa); color: #fff; font-size: 1.5rem; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); transition: all .2s; }
+.wa-float:active { transform: scale(0.9); }
+</style>
+</head>
+<body>
+
+<div class="status-bar"></div>
+
+<!-- NAV BAR -->
+<div class="nav-bar">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo-box">Aquí<br>tu logo</div>
+      <div class="nav-brand-text">
+        <div class="nav-brand-name">Dra. González</div>
+        <div class="nav-brand-esp">Ortodoncia · Buenos Aires</div>
+      </div>
+    </div>
+    <div class="nav-avatar">MG</div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- PÓRTICO 1 · INICIO -->
+<div class="panel active" id="panel-home">
+
+  <div class="identity-splash">
+    <div class="splash-logo-wrap">
+      <div class="splash-logo-ico">🦷</div>
+      <div class="splash-logo-txt">Aquí tu logo</div>
+    </div>
+    <div class="splash-name">Dra. González</div>
+    <div class="splash-esp">Ortodoncia · Buenos Aires</div>
+    <div class="splash-divider"></div>
+    <div class="splash-slogan">Tu sonrisa, nuestro compromiso</div>
+  </div>
+
+  <div class="identity-photos">
+    <div class="id-photo">
+      <div class="id-photo-ico">🖼️</div>
+      <div class="id-photo-lbl">Antes y Después</div>
+      <div class="id-photo-camera">📷</div>
+    </div>
+    <div class="id-photo">
+      <div class="id-photo-ico">🏥</div>
+      <div class="id-photo-lbl">Tu consultorio</div>
+      <div class="id-photo-camera">📷</div>
+    </div>
+    <div class="id-photo">
+      <div class="id-photo-ico">👩‍⚕️</div>
+      <div class="id-photo-lbl">Tu foto</div>
+      <div class="id-photo-camera">📷</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Tu progreso · Mes 8 de 18</div>
+    <div class="hero-name">¡Vas muy bien,<br>María! 🎉</div>
+    <div class="hero-sub">Brackets metálicos · En curso</div>
+    <div class="progress-wrap">
+      <div class="progress-labels"><span>Tratamiento</span><span>65%</span></div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+    </div>
+    <div class="hero-appt">
+      <div class="appt-cal"><div class="month">MAR</div><div class="day">25</div></div>
+      <div class="appt-info">
+        <div class="albl">Próxima cita</div>
+        <div class="adate">Martes 25 · 10:30 AM</div>
+        <div class="atype">Cambio de arco · Dra. González</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="module-grid">
+    <button class="module-btn" onclick="switchTab('tratamiento')"><span class="m-icon">🦷</span><div class="m-title">Mi tratamiento</div><div class="m-sub">Etapas · Fotos</div><div class="m-dot"></div></button>
+    <button class="module-btn" onclick="switchTab('guia')"><span class="m-icon">📚</span><div class="m-title">Guía del paciente</div><div class="m-sub">Higiene · Dieta</div></button>
+    <button class="module-btn" onclick="switchTab('emergencia')"><span class="m-icon">🚨</span><div class="m-title">Tengo un problema</div><div class="m-sub">Urgencias</div></button>
+    <button class="module-btn" onclick="switchTab('contacto')"><span class="m-icon">💬</span><div class="m-title">Contactar clínica</div><div class="m-sub">WhatsApp · Turno</div></button>
+    <button class="module-btn" onclick="switchTab('derivaciones')"><span class="m-icon">🔗</span><div class="m-title">Especialistas</div><div class="m-sub">Red de confianza</div></button>
+    <button class="module-btn" onclick="switchTab('galeria')"><span class="m-icon">📷</span><div class="m-title">Galería</div><div class="m-sub">Antes · Después</div></button>
+  </div>
+
+  <div class="tip-banner">
+    <div class="tip-title">💡 Consejo de esta semana</div>
+    <div class="tip-body">Usá el hilo dental interdental después de cada comida. Con brackets es clave para evitar la descalcificación del esmalte.</div>
+  </div>
+
+  <div class="powered-by">Desarrollado con <span>byClick</span> · Red Profesional Digital</div>
+</div>
+
+<!-- PÓRTICO 2 · TRATAMIENTO -->
+<div class="panel" id="panel-tratamiento">
+  <div class="section-title">Mi tratamiento</div>
+  <div class="section-sub">Seguimiento personalizado de tu caso</div>
+  <div class="ios-card"><div class="ios-card-inner">
+    <div class="list-header">📊 Etapas del tratamiento</div>
+    <div class="timeline">
+      <div class="tl-row done"><div class="tl-dot">✓</div><div><div class="tl-title">Estudio y diagnóstico</div><div class="tl-desc">Radiografías, fotos y modelos. Plan de tratamiento definido.</div><span class="tl-tag done">✓ Completado · Ago 2024</span></div></div>
+      <div class="tl-row done"><div class="tl-dot">✓</div><div><div class="tl-title">Colocación de brackets</div><div class="tl-desc">Cementado y primer arco de nivelación.</div><span class="tl-tag done">✓ Completado · Sep 2024</span></div></div>
+      <div class="tl-row done"><div class="tl-dot">✓</div><div><div class="tl-title">Nivelación y alineación</div><div class="tl-desc">Arcos progresivos para alinear todos los dientes.</div><span class="tl-tag done">✓ Completado · Feb 2025</span></div></div>
+      <div class="tl-row cur"><div class="tl-dot" style="color:#fff;font-size:0.7rem;font-weight:800;">●</div><div><div class="tl-title">Cierre de espacios</div><div class="tl-desc">Corrección de espacios y ajuste de arcadas.</div><span class="tl-tag cur">● En curso · Desde Mar 2025</span></div></div>
+      <div class="tl-row pend"><div class="tl-dot" style="font-size:0.7rem">○</div><div><div class="tl-title">Detallado final</div><div class="tl-desc">Ajustes finos para la oclusión perfecta.</div><span class="tl-tag pend">Pendiente · ~May 2025</span></div></div>
+      <div class="tl-row pend"><div class="tl-dot">🏆</div><div><div class="tl-title">Retiro y contención</div><div class="tl-desc">Retiro de brackets y colocación de retenedores.</div><span class="tl-tag pend">Pendiente · ~Mar 2026</span></div></div>
+    </div>
+  </div></div>
+  <div class="ios-card"><div class="ios-card-inner">
+    <div class="list-header">📸 Fotos de tu caso</div>
+    <div class="photo-strip">
+      <div class="photo-cell"><div class="photo-frame filled">😁</div><div class="photo-lbl">Inicio</div><div class="photo-date">Ago 2024</div></div>
+      <div class="photo-cell"><div class="photo-frame filled">🦷</div><div class="photo-lbl">Mes 2</div><div class="photo-date">Oct 2024</div></div>
+      <div class="photo-cell"><div class="photo-frame filled">✨</div><div class="photo-lbl">Mes 5</div><div class="photo-date">Ene 2025</div></div>
+      <div class="photo-cell"><div class="photo-frame filled">🌟</div><div class="photo-lbl">Mes 8</div><div class="photo-date">Mar 2025</div></div>
+      <div class="photo-cell"><div class="photo-frame">📷</div><div class="photo-lbl">Mes 12</div><div class="photo-date">Próxima</div></div>
+      <div class="photo-cell"><div class="photo-frame">🏆</div><div class="photo-lbl">Final</div><div class="photo-date">Mar 2026</div></div>
+    </div>
+  </div></div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 3 · GUÍA -->
+<div class="panel" id="panel-guia">
+  <div class="section-title">Guía del paciente</div>
+  <div class="section-sub">Todo lo que necesitas saber</div>
+  <div class="segmented">
+    <button class="seg-btn active" onclick="switchGuide('limpieza',this)">🪥 Higiene</button>
+    <button class="seg-btn" onclick="switchGuide('dieta',this)">🍽️ Dieta</button>
+  </div>
+  <div class="guide-sec active" id="guide-limpieza">
+    <div class="video-card">
+      <div class="video-embed-wrap"><iframe src="https://www.youtube.com/embed/3hjELhKj8tE" title="Cepillado con brackets" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
+      <div class="video-meta"><div class="vm-title">🪥 Cepillado + hilo dental con brackets</div><div class="vm-desc">Técnica completa para proteger tu esmalte durante el tratamiento.</div><span class="vm-tag">Esencial · Ver antes de tu rutina</span></div>
+    </div>
+    <div class="ios-card"><div class="ios-card-inner">
+      <div class="list-header">📋 Rutina diaria</div>
+      <div class="step-row"><div class="step-num">1</div><div class="step-text"><strong>Enjuague previo</strong> — Afloja los restos antes de cepillar.</div></div>
+      <div class="step-row"><div class="step-num">2</div><div class="step-text"><strong>Cepillo en 45°</strong> — Movimientos circulares. Mínimo 2 minutos.</div></div>
+      <div class="step-row"><div class="step-num">3</div><div class="step-text"><strong>Hilo interdental</strong> — Bajo el arco entre cada bracket. Paso clave.</div></div>
+      <div class="step-row"><div class="step-num">4</div><div class="step-text"><strong>Colutorio con flúor</strong> — Antes de dormir. Protege el esmalte.</div></div>
+      <div class="step-row" style="margin-bottom:0"><div class="step-num">5</div><div class="step-text"><strong>Revisión con espejo</strong> — Sin restos alrededor de los brackets.</div></div>
+    </div></div>
+  </div>
+  <div class="guide-sec" id="guide-dieta">
+    <div class="food-grid">
+      <div class="food-col food-ok"><div class="food-col-title">✅ Puedes comer</div><div class="food-row">🥩 Carnes blandas</div><div class="food-row">🍝 Pastas y arroz</div><div class="food-row">🥛 Lácteos</div><div class="food-row">🍌 Frutas blandas</div><div class="food-row">🥚 Huevos</div><div class="food-row">🍞 Pan blando</div></div>
+      <div class="food-col food-no"><div class="food-col-title">🚫 Evitar siempre</div><div class="food-row">🍎 Manzana entera</div><div class="food-row">🌽 Choclo entero</div><div class="food-row">🍬 Caramelos duros</div><div class="food-row">🍫 Chicle</div><div class="food-row">🥜 Nueces enteras</div><div class="food-row">🧊 Hielo</div></div>
+    </div>
+  </div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 4 · URGENCIAS -->
+<div class="panel" id="panel-emergencia">
+  <div id="emerg-list">
+    <div class="emerg-banner">
+      <div class="emerg-title">¿Tienes un problema? 🚨</div>
+      <div class="emerg-sub">Selecciona qué pasó y te decimos exactamente cómo actuar</div>
+      <button class="call-btn" onclick="alert('Llamando a la clínica...')">📞 Llamar ahora</button>
+    </div>
+    <div class="list-group">
+      <div class="list-header">Selecciona tu situación</div>
+      <button class="list-item" onclick="showDetail('dolor')"><div class="li-icon" style="background:var(--red-lt)">😣</div><div class="li-body"><div class="li-title">Dolor intenso o hinchazón</div><div class="li-sub">Dolor que no cede, hinchazón o fiebre</div></div><div class="li-right"><span class="li-badge badge-red">URGENTE</span><span class="li-chevron">›</span></div></button>
+      <button class="list-item" onclick="showDetail('alambre')"><div class="li-icon" style="background:var(--red-lt)">🔩</div><div class="li-body"><div class="li-title">Bracket con alambre suelto</div><div class="li-sub">El alambre pincha la mejilla o encía</div></div><div class="li-right"><span class="li-badge badge-red">URGENTE</span><span class="li-chevron">›</span></div></button>
+      <button class="list-item" onclick="showDetail('bracket')"><div class="li-icon" style="background:var(--orange-lt)">🪢</div><div class="li-body"><div class="li-title">Bracket despegado sin molestia</div><div class="li-sub">Se soltó pero no duele</div></div><div class="li-right"><span class="li-badge badge-orange">MODERADO</span><span class="li-chevron">›</span></div></button>
+      <button class="list-item" onclick="showDetail('ligadura')"><div class="li-icon" style="background:var(--orange-lt)">⭕</div><div class="li-body"><div class="li-title">Ligadura o gomita suelta</div><div class="li-sub">Se soltó la goma del arco</div></div><div class="li-right"><span class="li-badge badge-orange">MODERADO</span><span class="li-chevron">›</span></div></button>
+      <button class="list-item" onclick="showDetail('molestia')"><div class="li-icon" style="background:var(--green-lt)">😬</div><div class="li-body"><div class="li-title">Molestia o sensibilidad normal</div><div class="li-sub">Dolor leve post-ajuste</div></div><div class="li-right"><span class="li-badge badge-green">NORMAL</span><span class="li-chevron">›</span></div></button>
+      <button class="list-item" onclick="showDetail('roce')"><div class="li-icon" style="background:var(--green-lt)">🩹</div><div class="li-body"><div class="li-title">Bracket o alambre irrita</div><div class="li-sub">Llaga o herida por roce</div></div><div class="li-right"><span class="li-badge badge-green">LEVE</span><span class="li-chevron">›</span></div></button>
+    </div>
+    <div class="tip-banner"><div class="tip-title">🕯️ La cera de ortodoncia es tu mejor aliada</div><div class="tip-body">Toma un trocito, amásalo con los dedos y pégalo sobre el bracket o alambre que molesta. Alivio inmediato.</div></div>
+  </div>
+  <div id="emerg-detail" class="detail-view">
+    <button class="back-btn" onclick="hideDetail()">‹ Volver</button>
+    <div class="detail-hero"><div class="detail-icon-wrap" id="d-icon">😣</div><div class="detail-title" id="d-title">Dolor intenso</div></div>
+    <p class="detail-desc" id="d-desc"></p>
+    <div class="info-box green"><div class="info-box-head"><span>✅</span><div class="info-box-title">Qué hacer en casa</div></div><div class="info-box-text" id="d-inst"></div></div>
+    <div class="info-box red"><div class="info-box-head"><span>🚨</span><div class="info-box-title">Cuándo llamar al doctor</div></div><div class="info-box-text" id="d-alert"></div></div>
+    <button class="wa-btn-big" id="d-wa">💬 Informar a la Clínica por WhatsApp</button>
+  </div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 5 · CONTACTO -->
+<div class="panel" id="panel-contacto">
+  <div class="contact-hero">
+    <div class="contact-hero-title">Contacto con<br>tu clínica 💬</div>
+    <div class="contact-row"><div class="ci-ico">📱</div><div><span class="ci-lbl">WhatsApp</span><span class="ci-val">+54 11 0000-0000</span></div></div>
+    <div class="contact-row"><div class="ci-ico">📧</div><div><span class="ci-lbl">Email</span><span class="ci-val">dra@gonzalez.com</span></div></div>
+    <div class="contact-row"><div class="ci-ico">📍</div><div><span class="ci-lbl">Dirección</span><span class="ci-val">Av. Corrientes 1234, Piso 3</span></div></div>
+    <div class="contact-row"><div class="ci-ico">🕐</div><div><span class="ci-lbl">Horario</span><span class="ci-val">Lun–Vie 9–18h · Sáb 9–13h</span></div></div>
+    <button class="wa-btn-big" onclick="alert('Abriendo WhatsApp...')">💬 Escribir por WhatsApp</button>
+  </div>
+  <div class="ios-card"><div class="ios-card-inner">
+    <div class="list-header">📅 Solicitar turno</div>
+    <div class="form-grp"><label class="form-lbl">Tu nombre</label><input class="form-ctrl" placeholder="Tu nombre completo"></div>
+    <div class="form-grp"><label class="form-lbl">Motivo</label><select class="form-ctrl"><option>Control de rutina</option><option>Bracket despegado</option><option>Dolor o molestia</option><option>Consulta general</option></select></div>
+    <div class="form-row-2">
+      <div class="form-grp"><label class="form-lbl">Fecha</label><input type="date" class="form-ctrl"></div>
+      <div class="form-grp"><label class="form-lbl">Hora</label><select class="form-ctrl"><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option></select></div>
+    </div>
+    <div class="form-grp"><label class="form-lbl">Mensaje</label><textarea class="form-ctrl" placeholder="Cuéntanos qué necesitas..."></textarea></div>
+    <button class="primary-btn" onclick="alert('✅ ¡Solicitud enviada! Te confirmamos por WhatsApp.')">📅 Solicitar turno</button>
+  </div></div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 6 · DERIVACIONES -->
+<div class="panel" id="panel-derivaciones">
+  <div class="section-title">Especialistas</div>
+  <div class="section-sub">Red de confianza de la Dra. González</div>
+  <div class="tip-banner"><div class="tip-title">🔗 Tu red de confianza</div><div class="tip-body">Estos especialistas trabajan en coordinación con tu tratamiento. Si necesitas una derivación, la Dra. González te acompañará en el proceso.</div></div>
+  <div class="derivacion-card">
+    <div class="deriv-header"><div class="deriv-ico" style="background:var(--brand-xlight)">🦷</div><div><div class="deriv-name">Dr. Martínez</div><div class="deriv-esp">Endodoncia · Especialista en conductos</div></div><span class="deriv-badge">De confianza</span></div>
+    <div class="deriv-actions"><button class="deriv-btn" onclick="alert('WhatsApp Dr. Martínez')">💬 WhatsApp</button><button class="deriv-btn" onclick="alert('Solicitar derivación')">📋 Derivación</button></div>
+  </div>
+  <div class="derivacion-card">
+    <div class="deriv-header"><div class="deriv-ico" style="background:var(--green-lt)">🩺</div><div><div class="deriv-name">Dra. López</div><div class="deriv-esp">Periodoncia · Salud de encías</div></div><span class="deriv-badge">De confianza</span></div>
+    <div class="deriv-actions"><button class="deriv-btn" onclick="alert('WhatsApp Dra. López')">💬 WhatsApp</button><button class="deriv-btn" onclick="alert('Solicitar derivación')">📋 Derivación</button></div>
+  </div>
+  <div class="derivacion-card">
+    <div class="deriv-header"><div class="deriv-ico" style="background:var(--brand-light)">🔬</div><div><div class="deriv-name">Lab. Dental Premium</div><div class="deriv-esp">Laboratorio · Prótesis y restauraciones</div></div><span class="deriv-badge">De confianza</span></div>
+    <div class="deriv-actions"><button class="deriv-btn" onclick="alert('Contactar')">💬 Contactar</button><button class="deriv-btn" onclick="alert('Ver trabajos')">📷 Ver trabajos</button></div>
+  </div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 7 · GALERÍA -->
+<div class="panel" id="panel-galeria">
+  <div class="section-title">Galería</div>
+  <div class="section-sub">Resultados y espacios de la clínica</div>
+  <div class="ios-card"><div class="ios-card-inner">
+    <div class="list-header">✨ Antes y Después</div>
+    <div class="galeria-grid">
+      <div class="galeria-item" onclick="alert('Caso 1')"><div class="galeria-item-ico">😁</div><div class="galeria-item-lbl">Caso 1</div><div class="galeria-item-tag">18 meses</div></div>
+      <div class="galeria-item" onclick="alert('Caso 2')"><div class="galeria-item-ico">✨</div><div class="galeria-item-lbl">Caso 2</div><div class="galeria-item-tag">24 meses</div></div>
+      <div class="galeria-item" onclick="alert('Caso 3')"><div class="galeria-item-ico">🦷</div><div class="galeria-item-lbl">Caso 3</div><div class="galeria-item-tag">12 meses</div></div>
+      <div class="galeria-item" onclick="alert('Ver más')"><div class="galeria-item-ico">➕</div><div class="galeria-item-lbl">Ver más</div></div>
+    </div>
+  </div></div>
+  <div class="ios-card"><div class="ios-card-inner">
+    <div class="list-header">🏥 Nuestro consultorio</div>
+    <div class="galeria-grid">
+      <div class="galeria-item"><div class="galeria-item-ico">🛋️</div><div class="galeria-item-lbl">Sala de espera</div></div>
+      <div class="galeria-item"><div class="galeria-item-ico">⚙️</div><div class="galeria-item-lbl">Equipamiento</div></div>
+    </div>
+  </div></div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICO 8 · CONSEJOS -->
+<div class="panel" id="panel-consejos">
+  <div class="section-title">Consejos</div>
+  <div class="section-sub">Recomendaciones semanales de tu profesional</div>
+  <div class="consejo-card"><div class="consejo-header"><div class="consejo-ico">🦷</div><div class="consejo-title">Consejo de esta semana</div><div class="consejo-date">Hoy</div></div><div class="consejo-text">Recuerda usar el hilo interdental después de cada comida principal. Es el paso más importante y el más olvidado durante el tratamiento con brackets.</div></div>
+  <div class="consejo-card" style="border-left-color:var(--brand-primary2)"><div class="consejo-header"><div class="consejo-ico">🍽️</div><div class="consejo-title">Alimentación esta semana</div><div class="consejo-date">Lun 18</div></div><div class="consejo-text">Corta todas las frutas y verduras duras en trozos pequeños. Una manzana en gajos es completamente segura.</div></div>
+  <div class="consejo-card" style="border-left-color:var(--green)"><div class="consejo-header"><div class="consejo-ico">💪</div><div class="consejo-title">Tu progreso va muy bien</div><div class="consejo-date">Lun 11</div></div><div class="consejo-text">Completaste el 65% del tratamiento. El cierre de espacios está avanzando exactamente según el plan.</div></div>
+  <div class="powered-by">Desarrollado con <span>byClick</span></div>
+</div>
+
+<!-- PÓRTICOS 9-16 RESERVADOS EN CÓDIGO -->
+<!-- P9:Laboratorio P10:2daRed P11:VideosPremium P12:Analitica P13:Documentos P14:Avatar P15:Blog P16:Extension -->
+
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-items">
+    <button class="tab-item active" onclick="switchTab('home')" id="tab-home"><div class="tab-icon">🏠</div><div class="tab-label">Inicio</div></button>
+    <button class="tab-item" onclick="switchTab('tratamiento')" id="tab-tratamiento"><div class="tab-icon">🦷</div><div class="tab-label">Tratamiento</div></button>
+    <button class="tab-item" onclick="switchTab('guia')" id="tab-guia"><div class="tab-icon">📚</div><div class="tab-label">Guía</div></button>
+    <button class="tab-item" onclick="switchTab('emergencia')" id="tab-emergencia"><div class="tab-icon">🚨</div><div class="tab-label">Urgencias</div></button>
+    <button class="tab-item" onclick="switchTab('contacto')" id="tab-contacto"><div class="tab-icon">💬</div><div class="tab-label">Contacto</div></button>
+  </div>
+</div>
+
+<button class="wa-float" onclick="alert('WhatsApp...')">💬</button>
+
+<script>
+const urgenciaData = {
+  dolor: { icon:'😣', title:'Dolor intenso o hinchazón', desc:'Dolor que no cede con analgésicos, hinchazón de encías o cara, o fiebre. Puede indicar infección u otra complicación seria.', inst:'Toma paracetamol según las indicaciones. Evita el ibuprofeno ya que puede interferir con el movimiento óseo. Aplica frío en la mejilla 15 minutos. Enjuaga con agua tibia con sal.', alert:'Llama a la clínica hoy si el dolor no responde a analgésicos, hay hinchazón facial, fiebre, o pus en la zona.' },
+  alambre: { icon:'🔩', title:'Bracket con alambre suelto', desc:'El bracket se despegó y el alambre quedó libre, pudiendo pinchar la mejilla o encía.', inst:'Aplica cera de ortodoncia sobre el extremo del alambre. Si puedes, dobla suavemente el alambre hacia el diente con una goma de borrar.', alert:'Contacta la clínica hoy. Urgente si el alambre se está clavando o hay sangrado.' },
+  bracket: { icon:'🪢', title:'Bracket despegado sin molestia', desc:'El bracket se despegó pero el alambre sigue en su sitio y no causa dolor.', inst:'Si está unido al arco, déjalo. Si se cayó, guárdalo en una bolsa. Aplica cera si roza.', alert:'Avisa en tu próximo turno. No dejes pasar más de 2 semanas.' },
+  ligadura: { icon:'⭕', title:'Ligadura o gomita suelta', desc:'La ligadura que sujeta el arco al bracket se soltó.', inst:'Intenta recolocarla con pinzas limpias. Aplica cera si el extremo pincha.', alert:'Consulta en tu próxima cita o antes si el arco se salió del bracket.' },
+  molestia: { icon:'😬', title:'Molestia o sensibilidad normal', desc:'Dolor leve después del ajuste. Es completamente normal.', inst:'Toma paracetamol si es necesario. Come alimentos blandos 2-3 días. Aplica frío en la mejilla.', alert:'Contacta al doctor si el dolor dura más de 7 días o es muy intenso.' },
+  roce: { icon:'🩹', title:'Bracket o alambre irrita', desc:'Un bracket o alambre genera una herida o úlcera en la mejilla.', inst:'Aplica cera de ortodoncia. Usa gel oral para llagas. Enjuaga con agua tibia con sal 3 veces al día.', alert:'Consulta si la llaga no mejora en 10 días o si tienes fiebre.' }
+};
+function switchTab(t) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  const el = document.getElementById('tab-'+t);
+  if(el) el.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(t === 'emergencia') hideDetail();
+}
+function switchGuide(id, el) {
+  document.querySelectorAll('.guide-sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('guide-'+id).classList.add('active');
+  el.classList.add('active');
+}
+function showDetail(id) {
+  const u = urgenciaData[id];
+  document.getElementById('d-icon').textContent = u.icon;
+  document.getElementById('d-title').textContent = u.title;
+  document.getElementById('d-desc').textContent = u.desc;
+  document.getElementById('d-inst').textContent = u.inst;
+  document.getElementById('d-alert').textContent = u.alert;
+  document.getElementById('d-wa').onclick = () => { window.open('https://wa.me/5491100000000?text='+encodeURIComponent('Tengo una urgencia: '+u.title), '_blank'); };
+  document.getElementById('emerg-list').style.display = 'none';
+  document.getElementById('emerg-detail').classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function hideDetail() {
+  document.getElementById('emerg-list').style.display = 'block';
+  document.getElementById('emerg-detail').classList.remove('active');
+}
+</script>
+</body>
+</html>
